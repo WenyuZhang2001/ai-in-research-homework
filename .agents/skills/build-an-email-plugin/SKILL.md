@@ -61,6 +61,10 @@ Their week 3 plugin loader should pick up the new folder with no code changes. I
 
 The class's CI only accepts changes under `week-4/submissions/<their-username>/`.
 
+## Then: part 4, subagents
+
+Part 4 of the homework has its own guide: open `.agents/skills/build-subagents/SKILL.md`, read the whole file, and follow it. Its work goes in the same pull request.
+
 ## Before ending any session
 
 Say where things stand and what's next, in two sentences. If the work isn't finished, write that note in the harness repository's `README.md` under a "Status" heading.

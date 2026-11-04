@@ -1,6 +1,6 @@
 ---
 name: harden-a-task
-description: Guide a student in UCLA's "AI in Research" class (EPSS 254, Fall 2026) through the week 6 homework - hardening their week 1 Harbor benchmark task until GPT-5.6 Terra and Sol fail on the science while a top expert still could solve it. Reads what happened in round 1, gets an independent solvability review, applies what is known about how frontier agents fail (self-referential validation, missing hypothesis terms, out-of-support extrapolation, premature completion), picks real levers over more of the same, re-reviews, runs or requests the two models, reads the attempts, and opens the pull request. Use when a student asks to harden or improve their task, or for help with this homework.
+description: Guide a student in UCLA's "AI in Research" class (EPSS 254, Fall 2026) through the week 6 homework - hardening their week 1 Harbor benchmark task until GPT-5.6 Terra and Sol fail on the science, aiming at more than a year of human expert time. Reads what happened in round 1, gets an independent solvability review, applies what is known about how frontier agents fail (self-referential validation, missing hypothesis terms, out-of-support extrapolation, premature completion), picks real levers over more of the same, re-reviews, runs or requests the two models, reads the attempts, and opens the pull request. Use when a student asks to harden or improve their task, or for help with this homework.
 ---
 
 # Harden a task (AI in Research, week 6)
@@ -9,7 +9,7 @@ description: Guide a student in UCLA's "AI in Research" class (EPSS 254, Fall 20
 
 The person in front of you is in a UCLA graduate seminar on AI in research: a student, an auditor or a professor, often a physical scientist. The assignment is `week-6/README.md` in this repository; read it first. Their week 1 task is in `week-1/submissions/<github-username>/<task-name>/`.
 
-The goal: **GPT-5.6 Terra and GPT-5.6 Sol don't solve the task, and a top expert still could.**
+The goal: **GPT-5.6 Terra and GPT-5.6 Sol don't solve the task. Aim for one that would take a human expert more than a year, ideally ten.** It has to stay solvable: a right answer exists, what the agent gets determines it, and the verifier can tell right from wrong.
 
 - **The student owns the science.** You do the engineering and propose; they decide what the task asks, what counts as right, and what an expert would accept. Stop at every CHECKPOINT and wait for their answer.
 - **You are the kind of system this task tests.** Use that. When you consider a design, say honestly how you would attack it, and which check you would write for yourself.
@@ -28,7 +28,7 @@ git merge upstream/main
 uv run tools/hw.py
 ```
 
-`uv run tools/hw.py` is the same checklist as week 1. Any change to the task invalidates the student's earlier approvals, on purpose: they sign off again with `uv run tools/hw.py approve instruction`, `window` and `publish` in their own terminal. Never run these for them. **No task yet?** Follow `.agents/skills/build-a-task/SKILL.md` first, using this guide when you choose the design.
+`uv run tools/hw.py` is the same checklist as week 1. Any change to the task invalidates the student's earlier approvals, on purpose: they sign off again with `uv run tools/hw.py approve instruction`, `window` and `publish` in their own terminal. Never run these for them. **No task yet?** Follow `.agents/skills/build-a-task/SKILL.md` first, using this guide when you choose the design. Where that guide asks for a task a top expert could do, this week's goal replaces it.
 
 ## Step 1: read what happened (CHECKPOINT)
 
@@ -57,6 +57,15 @@ When `authoring/solvability.md` exists, go through it together and fix each prob
 **CHECKPOINT:** the student agrees the science in each fix is right.
 
 ## Step 3: choose how to harden (CHECKPOINT)
+
+### Think in years of expert time
+
+A task a strong expert finishes in a week is too small. Aim for more than a year, ideally ten. Ask the student: what result took your group or your field that long? How long did it really take, and what took the time?
+
+- **Count thinking, not repetition.** Years of models tried and rejected, methods built, instruments understood and expertise learned count. Ten years of repeating one step can take an agent minutes.
+- **Base the estimate on history.** How long the work actually took is better evidence than a guess. Record it in `expert_time_estimate_hours` (a year is about 2,000 hours, ten years about 20,000) and in the README's Difficulty section.
+- **The reference still has to score 1.** So build on work that's already done: a thesis, a group's years of analysis, a published campaign. Ship its output in `solution/data/`, and record how it was made. No expert has to redo it within the task's limits.
+- **The agent still gets at most 5 hours,** and the computing a good method needs must fit in that. A year of human thought can fit; a month of CPU can't.
 
 ### How agents fail
 
@@ -101,17 +110,17 @@ Each lever makes these failures possible while staying fair. Pick what suits the
 - **Pivot, by default, if the agent solved it quickly.** A design it finished in minutes rarely becomes slow by adding to it. Keep the student's system and field; change the question, the deliverable, the structure and the grader.
 - **Patch if it was a genuine near miss on the science.** Add more hidden cases of the kind it missed, and remove the cue it relied on, fairly.
 
-**CHECKPOINT:** propose two or three concrete designs from the student's own science. For each, give one line each on what goes in, what comes out, how it's graded, which failure modes it invites, and *how you yourself would attack it*. The student picks one. Then write down, for each lever, what makes it fair: the evidence a careful expert would use.
+**CHECKPOINT:** propose two or three concrete designs from the student's own science. For each, give one line each on what goes in, what comes out, how it's graded, how long a human expert would need and what takes that time, which failure modes it invites, and *how you yourself would attack it*. The student picks one. Then write down, for each lever, what makes it fair: the evidence a careful expert would use.
 
 ## Step 4: build it
 
 Work as in the week 1 guide (`.agents/skills/build-a-task/SKILL.md`): update `instruction.md`, `environment/`, `solution/`, `tests/`, `task.toml` and the README sections.
 
-- **Instruction:** say what to find, not how to find it, and state every convention the tests enforce. Remove method hints unless an expert would need them. Test: could an independent expert solve it from this text alone?
-- **Reference:** it must solve the new task for real. If it needs research code or hours, ship the output in `solution/data/` and record how it was made.
+- **Instruction:** say what to find, not how to find it, and state every convention the tests enforce. Remove method hints. Test: with unlimited time, would this text and the data lead an independent expert to the right answer?
+- **Reference:** it must solve the new task for real. If it took research code, hours or years, ship the output in `solution/data/` and record how it was made. Nothing the agent doesn't get may be needed to reach it.
 - **Verifier:** real quantities, with windows chosen by the student. Write `authoring/evidence/calibrate.py`: run the reference, at least one other good method, doing nothing, the naive method and the wrong method you most expect. Good methods pass and wrong ones fail, with margin. Keep the results.
 - **Leak test each lever.** Try to pass with a shortcut. If a check can be passed without the step it's meant to test, fix it now. Most agent wins on hardened tasks are leaks, not traps beaten fairly.
-- **Keep what the tools expect:** the `harbor-canary` lines, the separate no-network verifier, and at most 18000 seconds for `timeout_sec`. `uv run tools/hw.py check` runs the static checks.
+- **Keep what the tools expect:** the `harbor-canary` lines, the separate no-network verifier, and at most 18000 seconds for `timeout_sec`. Set that limit for the work and computing the agent has to do; it no longer follows the expert estimate. `uv run tools/hw.py check` runs the static checks.
 
 Add to `authoring/attempts.md` under **Status** what you changed and why.
 
@@ -157,7 +166,7 @@ Read each run in full before you believe its reward, and add a row to `authoring
 
 ## Step 8: the pull request
 
-Update the README's Difficulty, Reference solution and Verification sections. Ask the student which AI helped and how, and that they've approved the instruction, window and publish steps again. Then:
+Update the README's Difficulty, Reference solution and Verification sections, and `expert_time_estimate_hours`. Ask the student which AI helped and how, and that they've approved the instruction, window and publish steps again. Then:
 
 ```
 uv run tools/hw.py submit --ai "<their answer>"

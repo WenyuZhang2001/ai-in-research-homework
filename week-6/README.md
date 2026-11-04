@@ -4,7 +4,7 @@
 
 In week 1 you built the hardest task you could, and we ran a frontier agent on it. Claude Opus 5.5 solved 6 of the 8 tasks, five of them in under 7 minutes. You now know much more about how these agents work, how they fail and how they get measured. Go back to your task and use all of it.
 
-**The goal: a task that GPT-5.6 Terra and GPT-5.6 Sol don't solve, and that a top expert in your field still could.** Both halves count. Making a task impossible, vague or unfair is easy, and it measures nothing.
+**The goal: a task that GPT-5.6 Terra and GPT-5.6 Sol don't solve. Aim for one that would take a human expert more than a year, ideally ten.** It has to stay solvable: a right answer exists, what the agent gets determines it, and your verifier can tell right from wrong. Making a task impossible, vague or unfair is easy, and it measures nothing.
 
 ## Start
 
@@ -27,7 +27,7 @@ Open your task's page on [class.xhelio.ai/homework](https://class.xhelio.ai/home
 
 ### 2. Fix its solvability
 
-A task is **solvable** when a top expert could solve it from the instruction and data alone, and a right answer reliably passes. Open a **new session** of your agent, so it doesn't know your reasoning, and give it this:
+A task is **solvable** when a right answer exists, the instruction and data determine it, and a right answer reliably passes while a wrong one fails. It doesn't have to be quick for a person. Open a **new session** of your agent, so it doesn't know your reasoning, and give it this:
 
 > Read `.agents/skills/check-solvability/SKILL.md` and review my task in `week-1/submissions/<your-github-username>/<task-name>/`.
 
@@ -36,6 +36,8 @@ Then fix what it finds: conventions the tests enforce but the instruction never 
 ### 3. Harden it
 
 Change the task so the agent fails on the science. In class and in our own runs, agents rarely fail on code. They fail on one scientific judgement, and the test they use to check it is one they built themselves, carrying the same wrong assumption.
+
+**Think in years of expert time.** A task a strong expert finishes in a week is too small. Aim for more than a year, ideally ten: the kind of result that took your group or your field that long. Count years of thinking: models tried and rejected, methods built, expertise learned. Ten years of repeating one step can take an agent minutes. Your reference solution still has to score 1, so build on work that's already done, such as your thesis, your group's years of analysis or a published campaign. The agent still gets at most 5 hours.
 
 | What tends to work | Why |
 |---|---|
@@ -87,7 +89,8 @@ A pull request that updates your task in place, in `week-1/submissions/<your-git
 - **The hardened task**: instruction, data, reference solution and verifier.
 - **`authoring/solvability.md`**: the review of the final version, from a session that didn't help build it.
 - **`authoring/attempts.md`**: one row per run, with what happened in your own words. Note what you changed and why under **Status**.
-- **`README.md`**: updated Difficulty, Reference solution and Verification sections, and `class_level` in `task.toml` (2 once it's honest, 3 if Terra and Sol fail on the science).
+- **`README.md`**: updated Difficulty, Reference solution and Verification sections. Difficulty says what takes a human expert so long.
+- **`task.toml`**: `expert_time_estimate_hours` (a year is about 2,000 hours, ten years about 20,000) and `class_level` (2 once it's honest, 3 if Terra and Sol fail on the science).
 
 It counts when your reference solution scores 1, an agent that does nothing scores 0, the automatic checks pass, the final review says *solvable*, and you've reported a Terra run and a Sol run, or asked us for them.
 

@@ -1,11 +1,11 @@
 ---
 name: check-solvability
-description: Independently review one Harbor benchmark task for solvability - could a top expert solve it from the instruction and data alone, and does a right answer reliably pass and a wrong one fail? Checks hidden conventions, stated versus hidden ranges, an honest reference solution, fresh draws or noise margins, whether the answer is identifiable and the key defensible, shortcuts and leaks, and resources; ends with a solvable or not_solvable verdict, the smallest fix, and authoring/solvability.md. Use for the week 6 homework in UCLA's "AI in Research" class, or whenever asked to check a task's solvability or fairness. Run it in a fresh session that did not help build the task.
+description: Independently review one Harbor benchmark task for solvability - does a right answer exist, do the instruction and data determine it, and does a right answer reliably pass and a wrong one fail? Checks hidden conventions, stated versus hidden ranges, an honest reference solution, fresh draws or noise margins, whether the answer is identifiable and the key defensible, shortcuts and leaks, and resources; ends with a solvable or not_solvable verdict, the smallest fix, and authoring/solvability.md. Use for the week 6 homework in UCLA's "AI in Research" class, or whenever asked to check a task's solvability or fairness. Run it in a fresh session that did not help build the task.
 ---
 
 # Is this task solvable?
 
-A task is **solvable** when a top expert could solve it from the instruction and data alone, within its limits, and when a right answer reliably passes and a wrong one reliably fails. This is a separate question from how hard it is. A task that frontier agents fail tells you nothing until you know it is solvable.
+A task is **solvable** when a right answer exists, the instruction and data determine it, a right answer reliably passes and a wrong one reliably fails. It doesn't have to be quick for a person: these tasks aim at more than a year of expert time, ideally ten. So never ask whether an expert could finish it soon. Ask whether unlimited expert time, with only what the agent gets, would lead to the right answer. A task that frontier agents fail tells you nothing until you know it is solvable.
 
 ## Your role
 
@@ -31,7 +31,7 @@ Does every range, limit, unit and condition in the instruction cover the hidden 
 ### 3. An honest reference
 Does the reference solution get its answer from the agent's inputs? Read `solution/` for any use of `tests/`, truth files, generator seeds, `authoring/` or precomputed answers. Then copy the task to a scratch folder, delete `tests/` and `authoring/` from the copy, run the reference on the agent-visible inputs alone, and score its output with the original verifier.
 
-The class allows a shipped reference when the real computation takes hours or needs research code. In that case, check that the task records how the output was made, and that an expert could reproduce it from what the agent gets. Say which case this is.
+The class allows a shipped reference when the real work took hours, years or research code. In that case, check that the task records how the output was made, and that no private data or unstated input went into it that the agent doesn't get. Given enough time, it must be reachable from what the agent gets. Say which case this is.
 
 ### 4. A right answer passes reliably
 Pick the case that fits:
@@ -62,7 +62,7 @@ Does the score turn on one obscure fact or a formula the solver either happens t
 - **The agent has the internet.** This repository is public, so `tests/`, `solution/` and the README can be fetched. Is the answer also in a paper, a catalogue or a public dataset the agent could look up? Say what a run's trace should be checked for.
 
 ### 11. Limits
-Does a stated method fit in `timeout_sec`, the CPUs, memory and storage in `task.toml`? Does the instruction say what the solver needs to know about them? Can a real solver install and run what it needs, with no private network, license or account? Is `expert_time_estimate_hours` believable next to the time limit?
+Does the computation a good method needs fit in `timeout_sec`, the CPUs, memory and storage in `task.toml`? Human time can far exceed the agent's limit, but computing time can't: a run that needs a month of CPU is not solvable in a 5-hour container. Does the instruction say what the solver needs to know about the limits? Can a real solver install and run what it needs, with no private network, license or account? Does the README say what `expert_time_estimate_hours` is based on? Record whether that time is thinking or repetition; repetition doesn't make a task hard, but it doesn't make it unsolvable either.
 
 ## The verdict
 

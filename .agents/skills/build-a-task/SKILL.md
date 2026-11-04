@@ -184,6 +184,8 @@ By submitting, the student licenses their task under the repository's MIT licens
 
 When the student comes back to improve their task, run `uv run tools/hw.py`, then read `authoring/attempts.md` and the task's `class_level`.
 
+For levels 2 and 3, follow `.agents/skills/harden-a-task/SKILL.md` (the week 6 homework), with `.agents/skills/check-solvability/SKILL.md` for an independent review.
+
 - **To reach level 2 (honest):** read the whole trajectory of each frontier agent run on the task (the instructor runs them). Ask:
   - Did it fail only because the instruction was ambiguous?
   - Could it pass without doing the science: by guessing, writing a plausible default, reading something it shouldn't, or fetching this public repository, where `tests/` and the README reveal the answer?

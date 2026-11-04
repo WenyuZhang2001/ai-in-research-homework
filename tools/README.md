@@ -13,7 +13,7 @@ Your AI agent runs these for you. Here they are if you'd rather work by hand. Ru
 | `uv run tools/hw.py check [task-folder]` | The static checks CI runs, grouped by step |
 | `uv run tools/hw.py approve instruction`, `window`, `publish` | You sign off at the three checkpoints. Only works in your own terminal |
 | `uv run tools/hw.py note "<where we are, what's next>"` | Leaves a note for your next session |
-| `uv run tools/hw.py submit --ai "<which AI helped, and how>"` | Makes your fork, commits, pushes and opens your pull request, or updates it |
+| `uv run tools/hw.py submit --ai "<which AI helped, and how>"` | Makes your fork, commits, pushes and opens your pull request, or updates it. If your task was already merged and has changed since, it opens a new pull request |
 
 `tools/hw.py` keeps a task's approvals in its `authoring/progress.json`, each with a fingerprint of the files it covered, so a later change shows up. What it knows about your computer (your confirmed GitHub account) stays in `.git/hw.json` and never leaves your computer.
 

@@ -514,6 +514,15 @@ def approve_next(what, progress):
     return Next("student", text, [student_cmd(f"approve {what}")], step=step)
 
 
+def changed_since_merge(c, task):
+    """Whether a task differs from the class repository's main: a revision of a task already merged."""
+    if not c.class_remote:
+        return False
+    run(["git", "fetch", "-q", c.class_remote, "main"], timeout=90)
+    path = rel(task)
+    return bool(git("diff", "--name-only", c.base_ref(), "--", path) or git("status", "--porcelain", "--", path))
+
+
 def task_items(c, task, check_pr=True):
     """The task's checklist, as (items, task)."""
     groups, _, _ = lint(task)
@@ -572,6 +581,9 @@ def task_items(c, task, check_pr=True):
         add("pr", None, "pull request open")
         return items, task
     pr = find_pr(c, branch)
+    c._revision = bool(pr and pr.get("state") == "MERGED" and changed_since_merge(c, task))
+    if c._revision:
+        pr = None  # the task was merged and has changed since: the update gets a new pull request
     c._pr = pr
     if pr is False:
         add("pr", False, "pull request open", Next("you", "Couldn't ask GitHub about pull requests. Check the internet connection."))
@@ -899,11 +911,13 @@ def cmd_submit(args):
 
     branch = BRANCH_PREFIX + task.name
     add = ["git", "add", "--", rel(task)]
-    commit = ["git", "commit", "-q", "-m", ("Update " if pr else "Add ") + task.name]
+    revision = getattr(c, "_revision", False)
+    commit = ["git", "commit", "-q", "-m", ("Update " if pr or revision else "Add ") + task.name]
     push = ["git", "push", "-u", "origin", branch]
     body_path = Path(tempfile.gettempdir()) / f"hw-pr-{task.name}.md"
     create = ["gh", "pr", "create", "--repo", CLASS_REPO, "--base", "main", "--head", f"{c.login}:{branch}",
-              "--title", f"[week {WEEK_N}] {task.name}", "--body-file", str(body_path)]
+              "--title", f"[task update] {task.name}" if revision else f"[week {WEEK_N}] {task.name}",
+              "--body-file", str(body_path)]
     if args.dry_run:
         print("Dry run. Would run:")
         ensure_github(c, dry_run=True)

@@ -87,3 +87,12 @@ A pull request that updates your task in place, in `week-1/submissions/<your-git
 It counts when your reference solution scores 1, an agent that does nothing scores 0, the automatic checks pass, and the final review says *solvable*.
 
 **Still solved at the deadline?** That still counts. Record the run that beat it and what you'd try next. An honest task that was solved teaches more than an unfair one that wasn't.
+
+## Take it to Terminal-Bench-Science
+
+You're encouraged to submit your task to [Terminal-Bench-Science 2.0](https://www.terminal-bench-science.ai/contribute), the public benchmark whose format this class uses. It's optional, and it's how this work can earn you credit beyond the class: each merged task earns one co-authorship point, split equally between its contributors, and one point qualifies you for co-authorship on the paper. Submissions close on **December 15, 2026**.
+
+- **Propose first.** Send your idea through their Task Proposal Form. Once it's approved, you build the task and open a pull request there. It goes through human review, and merging is at the project lead's discretion.
+- **Aim past Sol.** They want tasks that today's best agents can't reliably solve, and they currently test with Claude Opus 5.5 and GPT-6 Astra. If your task holds against Sol, ask us in your pull request to try a stronger model.
+- **Read their bar.** Have your agent check your task against their [proposal rubric](https://github.com/harbor-framework/terminal-bench-science/blob/main/rubrics/task-proposal.md) and [contributing guide](https://github.com/harbor-framework/terminal-bench-science/blob/main/CONTRIBUTING.md).
+- **Say where it came from.** They ask you to declare a task's provenance and prior use, so say it began as homework here. Tasks must be authored by domain experts working in the task's field.

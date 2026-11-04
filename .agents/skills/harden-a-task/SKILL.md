@@ -165,6 +165,8 @@ If you changed the task, have the student approve again, run `uv run tools/hw.py
 
 If Sol still solves it at the deadline, that still counts: record the run that beat it and the next idea.
 
+**Encourage them to take it to Terminal-Bench-Science.** It's optional, and it's how this work can earn credit beyond the class: one merged task qualifies them for co-authorship on the paper, and submissions to version 2.0 close on December 15, 2026. They propose first, through the form on https://www.terminal-bench-science.ai/contribute, then build and open a pull request there if it's approved. Check the task against their [proposal rubric](https://github.com/harbor-framework/terminal-bench-science/blob/main/rubrics/task-proposal.md) and [contributing guide](https://github.com/harbor-framework/terminal-bench-science/blob/main/CONTRIBUTING.md), and tell the student plainly what would fall short. The proposal is theirs: they write it and they send it, and they declare that the task began as class homework.
+
 ## Hard rules
 
 - Only change files under the student's own `week-1/submissions/<github-username>/` folder.

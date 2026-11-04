@@ -1,6 +1,6 @@
 ---
 name: harden-a-task
-description: Guide a student in UCLA's "AI in Research" class (EPSS 254, Fall 2026) through the week 6 homework - hardening their week 1 Harbor benchmark task until GPT-5.6 Terra and Sol fail on the science, aiming at more than a year of human expert time. Reads what happened in round 1, gets an independent solvability review, applies what is known about how frontier agents fail (self-referential validation, missing hypothesis terms, out-of-support extrapolation, premature completion), picks real levers over more of the same, re-reviews, runs or requests the two models, reads the attempts, and opens the pull request. Use when a student asks to harden or improve their task, or for help with this homework.
+description: Guide a student in UCLA's "AI in Research" class (EPSS 254, Fall 2026) through the week 6 homework - hardening their week 1 Harbor benchmark task until GPT-5.6 Sol fails on the science, aiming at more than a year of human expert time. Reads what happened in round 1, gets an independent solvability review, applies what is known about how frontier agents fail (self-referential validation, missing hypothesis terms, out-of-support extrapolation, premature completion), picks real levers over more of the same, re-reviews, opens the pull request, and reads the GPT-5.6 Sol run the class does on it. Use when a student asks to harden or improve their task, or for help with this homework.
 ---
 
 # Harden a task (AI in Research, week 6)
@@ -9,7 +9,7 @@ description: Guide a student in UCLA's "AI in Research" class (EPSS 254, Fall 20
 
 The person in front of you is in a UCLA graduate seminar on AI in research: a student, an auditor or a professor, often a physical scientist. The assignment is `week-6/README.md` in this repository; read it first. Their week 1 task is in `week-1/submissions/<github-username>/<task-name>/`.
 
-The goal: **GPT-5.6 Terra and GPT-5.6 Sol don't solve the task. Aim for one that would take a human expert more than a year, ideally ten.** It has to stay solvable: a right answer exists, what the agent gets determines it, and the verifier can tell right from wrong.
+The goal: **GPT-5.6 Sol doesn't solve the task. Aim for one that would take a human expert more than a year, ideally ten.** It has to stay solvable: a right answer exists, what the agent gets determines it, and the verifier can tell right from wrong.
 
 - **The student owns the science.** You do the engineering and propose; they decide what the task asks, what counts as right, and what an expert would accept. Stop at every CHECKPOINT and wait for their answer.
 - **You are the kind of system this task tests.** Use that. When you consider a design, say honestly how you would attack it, and which check you would write for yourself.
@@ -17,7 +17,7 @@ The goal: **GPT-5.6 Terra and GPT-5.6 Sol don't solve the task. Aim for one that
 - **Be honest about results.** Never edit a reward, fake an attempt or claim a run you didn't do. A solved task reported honestly is a good result.
 - **Secrets stay out of this conversation.** Never ask for a key or password, and never print one.
 
-Say hello, explain the homework in two sentences, and give the plan: (0) get the task on a branch, (1) read what happened, (2) solvability review, (3) choose how to harden, (4) build it, (5) second review, (6) run Terra and Sol, (7) read the attempts, (8) pull request. Usually two or three sessions of 1–2 hours, plus waiting for runs.
+Say hello, explain the homework in two sentences, and give the plan: (0) get the task on a branch, (1) read what happened, (2) solvability review, (3) choose how to harden, (4) build it, (5) second review, (6) pull request, where the class runs GPT-5.6 Sol, (7) read the attempts, (8) finish. Usually two or three sessions of 1–2 hours, plus waiting for runs.
 
 ## Step 0: get the task on a branch
 
@@ -128,43 +128,7 @@ Add to `authoring/attempts.md` under **Status** what you changed and why.
 
 Back to a **new session** with the same prompt as Step 2, on the final version. Hardening is how tasks become unfair, so this one matters more than the first. Fix and repeat until the verdict is `solvable`. The report on the final version stays in `authoring/solvability.md`.
 
-## Step 6: run Terra and Sol
-
-One run each at `xhigh`. Solved means reward 1. Run Terra first, since it costs about half as much; if it solves the task, go back to Step 3 rather than spending on Sol.
-
-Ask the student which way they want:
-
-**A. Ask the instructor.** Open or update the pull request (Step 8), and say in it that the task is ready for a run. The results get posted there. The usual choice.
-
-**B. Run them yourself.** Needs Docker and an OpenAI API key, set by the student in their own terminal. A long run can cost tens of dollars, so check they're happy with that first.
-
-```
-uvx harbor@0.23.0 run -p <task-folder> -a codex -m openai/gpt-5.6-terra --ak reasoning_effort=xhigh --ak web_search=disabled
-uvx harbor@0.23.0 run -p <task-folder> -a codex -m openai/gpt-5.6-sol --ak reasoning_effort=xhigh --ak web_search=disabled
-```
-
-`web_search=disabled` matters because this repository is public, with the tests in it. It removes the search tool, not the network, so still read the trace for fetches of this repository.
-
-**C. A rough check without Docker,** if their ChatGPT plan includes the models:
-
-1. Make an empty folder outside this repository. Copy in the agent-visible data and `instruction.md`, and nothing else: no `tests/`, `solution/`, `authoring/` or README.
-2. In that folder, have the student run in a terminal: `codex exec -m gpt-5.6-terra -c model_reasoning_effort=xhigh --skip-git-repo-check "$(cat instruction.md)"`. Paths in the instruction may need adapting to the folder; say so if they do.
-3. Run the verifier's checks on the output, adapting its paths.
-
-This helps while iterating, but record it as a rough check: only a Harbor run counts as the result, because only it has the sealed container and the real limits.
-
-## Step 7: read the attempts (CHECKPOINT)
-
-Read each run in full before you believe its reward, and add a row to `authoring/attempts.md`.
-
-- **Did it fail on the science?** Check that it had everything it needed. If it failed on an ambiguity, a missing tool or a window that rejects good work, that's a gap in the task: fix it and run again. Name which failure mode you saw, and quote the moment.
-- **Did it cheat?** Read for fetches of this repository, a look-up of the published answer, edited or special-cased checks. Fix the leak; the run doesn't count either way.
-- **Did it solve it?** Find the decisive move, as in Step 1, and go back to Step 3. Use a different lever from the one it beat.
-- **Did it hold against both?** That's the floor reached. If the student wants more, try a stronger model, such as Claude Opus 5.5 or GPT-6.1 Sol, or look at Terminal-Bench-Science's bar.
-
-**CHECKPOINT:** the student agrees with your reading of each run. Set `class_level` in `task.toml`: 2 once the task is honest, 3 if both models fail on the science across the runs you have.
-
-## Step 8: the pull request
+## Step 6: the pull request
 
 Update the README's Difficulty, Reference solution and Verification sections, and `expert_time_estimate_hours`. Ask the student which AI helped and how, and that they've approved the instruction, window and publish steps again. Then:
 
@@ -172,9 +136,34 @@ Update the README's Difficulty, Reference solution and Verification sections, an
 uv run tools/hw.py submit --ai "<their answer>"
 ```
 
-This opens a new pull request for the updated task, and GitHub checks that the reference still scores 1 and doing nothing 0. If runs are still needed, have the student say so in the pull request. Check it passes. Tell them plainly what the task now measures, what the runs showed, and what you'd try next.
+This opens a new pull request for the updated task, and GitHub checks that the reference still scores 1 and doing nothing 0. Check it passes.
 
-If a model still solves it at the deadline, submit anyway with the run that beat it and the next idea.
+The class then runs GPT-5.6 Sol on the task, one run at `xhigh` with web search off, and posts the result and its trace in the pull request. Solved means reward 1. The student needs no Docker or API key. A run can take up to the task's time limit, so tell them to submit early enough to act on the result.
+
+**Want an earlier look?** If their ChatGPT plan includes Sol, you can set up a rough check without Docker:
+
+1. Make an empty folder outside this repository. Copy in the agent-visible data and `instruction.md`, and nothing else: no `tests/`, `solution/`, `authoring/` or README.
+2. In that folder, have the student run in a terminal: `codex exec -m gpt-5.6-sol -c model_reasoning_effort=xhigh --skip-git-repo-check "$(cat instruction.md)"`. Paths in the instruction may need adapting to the folder; say so if they do.
+3. Run the verifier's checks on the output, adapting its paths.
+
+This helps while iterating, but record it as a rough check: only the class's run counts as the result, because only it has the sealed container and the real limits.
+
+## Step 7: read the attempts (CHECKPOINT)
+
+Read each run in full before you believe its reward, and add a row to `authoring/attempts.md`.
+
+- **Did it fail on the science?** Check that it had everything it needed. If it failed on an ambiguity, a missing tool or a window that rejects good work, that's a gap in the task: fix it and ask for another run. Name which failure mode you saw, and quote the moment.
+- **Did it cheat?** Read for fetches of this repository, a look-up of the published answer, edited or special-cased checks. Fix the leak; the run doesn't count either way.
+- **Did it solve it?** Find the decisive move, as in Step 1, and go back to Step 3. Use a different lever from the one it beat, then ask for another run.
+- **Did it hold?** That's the floor reached. If the student wants more, ask in the pull request for a stronger model, such as Claude Opus 5.5 or GPT-6.1 Sol, or look at Terminal-Bench-Science's bar.
+
+**CHECKPOINT:** the student agrees with your reading of each run. Set `class_level` in `task.toml`: 2 once the task is honest, 3 if Sol fails on the science across the runs you have.
+
+## Step 8: finish
+
+If you changed the task, have the student approve again, run `uv run tools/hw.py submit --ai "<their answer>"` to update the pull request, and have them ask there for another run. Tell them plainly what the task now measures, what the runs showed, and what you'd try next.
+
+If Sol still solves it at the deadline, that still counts: record the run that beat it and the next idea.
 
 ## Hard rules
 

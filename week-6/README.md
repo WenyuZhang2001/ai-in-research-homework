@@ -4,7 +4,7 @@
 
 In week 1 you built the hardest task you could, and we ran a frontier agent on it. Claude Opus 5.5 solved 6 of the 8 tasks, five of them in under 7 minutes. You now know much more about how these agents work, how they fail and how they get measured. Go back to your task and use all of it.
 
-**The goal: a task that GPT-5.6 Terra and GPT-5.6 Sol don't solve. Aim for one that would take a human expert more than a year, ideally ten.** It has to stay solvable: a right answer exists, what the agent gets determines it, and your verifier can tell right from wrong. Making a task impossible, vague or unfair is easy, and it measures nothing.
+**The goal: a task that GPT-5.6 Sol doesn't solve. Aim for one that would take a human expert more than a year, ideally ten.** It has to stay solvable: a right answer exists, what the agent gets determines it, and your verifier can tell right from wrong. Making a task impossible, vague or unfair is easy, and it measures nothing.
 
 ## Start
 
@@ -62,25 +62,17 @@ Your agent has the details, in `.agents/skills/harden-a-task/SKILL.md`. If the a
 
 Hardening is how good tasks become unfair. When you think you're done, have another new session review the final version, and fix what it finds. Save its report as `authoring/solvability.md`.
 
-### 5. Run GPT-5.6 Terra and Sol
+### 5. Submit, and we run GPT-5.6 Sol
 
-One run of each, at `xhigh` effort. **Solved** means reward 1. Terra costs about half as much as Sol, so run it first; if Terra solves it, go back to step 3.
+Open your pull request. We run GPT-5.6 Sol on your task, one run at `xhigh` effort, and post the result and its trace there. **Solved** means reward 1. You don't need Docker or an API key. A run can take up to your task's time limit, so submit early enough to act on the result.
 
-- **Ask the instructor.** Say so in your pull request, and we'll run them and post the results there.
-- **Run them yourself**, if you have Docker and an OpenAI API key. A long run can cost tens of dollars.
-
-  ```
-  uvx harbor@0.23.0 run -p <task-folder> -a codex -m openai/gpt-5.6-terra --ak reasoning_effort=xhigh --ak web_search=disabled
-  uvx harbor@0.23.0 run -p <task-folder> -a codex -m openai/gpt-5.6-sol --ak reasoning_effort=xhigh --ak web_search=disabled
-  ```
-
-- **A rough check, without Docker.** If your ChatGPT plan includes these models, your agent can set up a blind run with the Codex CLI and score it. It helps you iterate, but only a Harbor run counts as the result.
+**Want an earlier look?** If your ChatGPT plan includes Sol, your agent can set up a blind run with the Codex CLI and score it. It helps you iterate, but only our run counts as the result.
 
 ### 6. Read the attempts
 
-Read each run before you believe its reward. A failure counts only if the agent had everything it needed and failed on the science; if it failed on a gap in your task, fix the gap and run again. If it solved the task, find out how, and go back to step 3.
+Read each run before you believe its reward. A failure counts only if the agent had everything it needed and failed on the science; if it failed on a gap in your task, fix the gap, push the change and ask for another run in your pull request. If it solved the task, find out how, go back to step 3, and ask for another run when you've changed it.
 
-Holding against Terra and Sol is the floor. If you get there, try a stronger model.
+Holding against Sol is the floor. If you get there, ask us for a stronger model.
 
 ## What you submit
 
@@ -90,8 +82,8 @@ A pull request that updates your task in place, in `week-1/submissions/<your-git
 - **`authoring/solvability.md`**: the review of the final version, from a session that didn't help build it.
 - **`authoring/attempts.md`**: one row per run, with what happened in your own words. Note what you changed and why under **Status**.
 - **`README.md`**: updated Difficulty, Reference solution and Verification sections. Difficulty says what takes a human expert so long.
-- **`task.toml`**: `expert_time_estimate_hours` (a year is about 2,000 hours, ten years about 20,000) and `class_level` (2 once it's honest, 3 if Terra and Sol fail on the science).
+- **`task.toml`**: `expert_time_estimate_hours` (a year is about 2,000 hours, ten years about 20,000) and `class_level` (2 once it's honest, 3 if Sol fails on the science).
 
-It counts when your reference solution scores 1, an agent that does nothing scores 0, the automatic checks pass, the final review says *solvable*, and you've reported a Terra run and a Sol run, or asked us for them.
+It counts when your reference solution scores 1, an agent that does nothing scores 0, the automatic checks pass, and the final review says *solvable*.
 
-**Still solved at the deadline?** Submit it anyway, with the run that beat it and what you'd try next. An honest task that was solved teaches more than an unfair one that wasn't.
+**Still solved at the deadline?** That still counts. Record the run that beat it and what you'd try next. An honest task that was solved teaches more than an unfair one that wasn't.

@@ -3,7 +3,7 @@
 
 ## Status
 
-Final historical-audit review is solvable; isolated reference and wrong-method checks pass; static checks pass. GitHub WenyuZhang2001 is explicitly owner-confirmed. Working on course-required week1-sector-momentum-backtest. Next: student personally approves instruction, then window and publication; AI-assistance disclosure and PR/CI follow. No full container or model run claimed. Earlier experiments are preserved under Development history. (2026-11-08)
+Week 6 PR #33 is open: https://github.com/huangzesen/ai-in-research-homework/pull/33 . Initial course CI planner failed because the archived prototype also had task.toml. Local commit 9992219 renames only that unchanged archive to task.toml.snapshot; CI planner and static checks now pass locally. This packaging-only fix is not pushed yet: student must renew publication approval; instruction/window approvals remain valid. Then run submit with the confirmed Codex disclosure, check CI and preserve the Week 6 PR title/body. No full container or Sol run result is claimed. (2026-11-08)
 
 ## Development history
 
